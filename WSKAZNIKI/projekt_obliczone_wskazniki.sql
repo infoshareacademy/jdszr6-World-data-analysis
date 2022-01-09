@@ -766,3 +766,381 @@ order by spadek_wzrost desc
 
 
 
+
+
+--TOP 10 NAJLEPSZYCH PAŃSTW FF consumption
+select
+ffc06.CountryName,
+ffc06.wskaznik as wskaznik_2006,
+ffc10.wskaznik as wskaznik_2010,
+round(ffc10.wskaznik/ ffc06.wskaznik-1,2) as wzrost_wskaznika
+from v_fossil_fuel_consumption_2006 ffc06
+join v_fossil_fuel_consumption_2010 ffc10
+on ffc06.CountryCode = ffc10.CountryCode
+join Country c
+on c.CountryCode = ffc06.CountryCode
+where c.Region = 'Sub-Saharan Africa'
+order by wzrost_wskaznika desc
+Limit 10
+
+
+
+--TOP 10 NAJGORSZYCH PAŃSTW FF consumption (ze wskzanikiem pomiedzy 2008)
+select
+ffc06.CountryName,
+ffc06.wskaznik as wskaznik_2006,
+ffc08.wskaznik as wskaznik_2008,
+ffc10.wskaznik as wskaznik_2010,
+round(ffc10.wskaznik/ffc06.wskaznik-1,2) as spadek_wskaznika
+from v_fossil_fuel_consumption_2006 ffc06
+join v_fossil_fuel_consumption_2010 ffc10
+on ffc06.CountryCode = ffc10.CountryCode
+join v_fossil_fuel_consumption_2008 ffc08
+on ffc08.CountryCode = ffc06.CountryCode
+join Country c
+on c.CountryCode = ffc06.CountryCode
+where c.Region = 'Europe & Central Asia'
+order by spadek_wskaznika 
+Limit 10
+
+
+--TOP 10 SPADEK Fuel exports
+select
+fes10.CountryName,
+fes10.wskaznik as wskaznik_2010,
+fes14.wskaznik as wskaznik_2014,
+case when fes10.wskaznik < 0 then round(fes14.wskaznik/fes10.wskaznik-1,2)*-1
+when fes10.wskaznik > 0 then round(fes14.wskaznik/fes10.wskaznik-1,2) 
+else round(fes14.wskaznik/fes10.wskaznik-1,2) end spadek_wskaznika
+from v_fuel_exports_2010 fes10
+join v_fuel_exports_2014 fes14
+on fes10.CountryCode = fes14.CountryCode 
+join Country c
+on c.CountryCode = fes10.CountryCode
+where c.Region = 'Europe & Central Asia' and spadek_wskaznika is not null 
+order by spadek_wskaznika 
+Limit 10
+
+
+--TOP 10 NAJWIĘKSZY WZROST Fuel exports
+select
+fes10.CountryName,
+fes10.wskaznik as wskaznik_2010,
+fes14.wskaznik as wskaznik_2014,
+case when fes10.wskaznik < 0 then round(fes14.wskaznik/fes10.wskaznik-1,2)*-1
+when fes10.wskaznik > 0 then round(fes14.wskaznik/fes10.wskaznik-1,2) 
+else round(fes14.wskaznik/fes10.wskaznik-1,2) end wzrost_wskaznika
+from v_fuel_exports_2010 fes10
+join v_fuel_exports_2014 fes14
+on fes10.CountryCode = fes14.CountryCode
+join Country c
+on c.CountryCode = fes10.CountryCode
+where c.Region = 'Sub-Saharan Africa' and wzrost_wskaznika is not null 
+order by wzrost_wskaznika desc
+Limit 10
+
+
+
+--TOP 10 SPADEK Exports of goods and services (annual % growth)
+select
+ex_gs10.CountryName,
+ex_gs10.wskaznik as wskaznik_2010,
+ex_gs14.wskaznik as wskaznik_2014,
+case when ex_gs10.wskaznik < 0 then round(ex_gs14.wskaznik/ex_gs10.wskaznik-1,2)*-1
+when ex_gs10.wskaznik > 0 then round(ex_gs14.wskaznik/ex_gs10.wskaznik-1,2) 
+else round(ex_gs14.wskaznik/ex_gs10.wskaznik-1,2) end spadek_wskaznika
+from v_exports_goods_services_2010 ex_gs10
+join v_exports_goods_services_2014 ex_gs14
+on ex_gs10.CountryCode = ex_gs14.CountryCode
+join Country c
+on c.CountryCode = ex_gs10.CountryCode
+where c.Region = 'Middle East & North Africa' and spadek_wskaznika is not null 
+order by spadek_wskaznika 
+Limit 10
+
+
+--TOP 10 WZROST Exports of goods and services (annual % growth)
+
+select
+ex_gs10.CountryName,
+ex_gs10.wskaznik as wskaznik_2010,
+ex_gs14.wskaznik as wskaznik_2014,
+case when ex_gs10.wskaznik < 0 then round(ex_gs14.wskaznik/ex_gs10.wskaznik-1,2)*-1
+when ex_gs10.wskaznik > 0 then round(ex_gs14.wskaznik/ex_gs10.wskaznik-1,2) 
+else round(ex_gs14.wskaznik/ex_gs10.wskaznik-1,2) end wzrost_wskaznika
+from v_exports_goods_services_2010 ex_gs10
+join v_exports_goods_services_2014 ex_gs14
+on ex_gs10.CountryCode = ex_gs14.CountryCode
+join Country c
+on c.CountryCode = ex_gs10.CountryCode
+where c.Region = 'South Asia' and wzrost_wskaznika is not null 
+order by wzrost_wskaznika desc
+Limit 10
+
+
+
+
+--PODZIAL NA REGIONY--
+--TOP 10 SPADEK Imports of goods and services (annual % growth)
+
+select
+imp_gs10.CountryName,
+imp_gs10.wskaznik as wskaznik_2010,
+imp_gs14.wskaznik as wskaznik_2014,
+case when imp_gs10.wskaznik < 0 then round(imp_gs14.wskaznik/imp_gs10.wskaznik-1,2)*-1
+when imp_gs10.wskaznik > 0 then round(imp_gs14.wskaznik/imp_gs10.wskaznik-1,2) 
+else round(imp_gs14.wskaznik/imp_gs10.wskaznik-1,2) end spadek_wskaznika
+from v_imports_goods_services_2010 imp_gs10
+join v_imports_goods_services_2014 imp_gs14
+on imp_gs10.CountryCode = imp_gs14.CountryCode
+join Country c
+on c.CountryCode = imp_gs10.CountryCode
+where c.Region = 'Latin America & Caribbean' and spadek_wskaznika is not null
+order by spadek_wskaznika 
+Limit 10
+
+
+--TOP 10 WZROST Imports of goods and services (annual % growth)
+
+select
+imp_gs10.CountryName,
+imp_gs10.wskaznik as wskaznik_2010,
+imp_gs14.wskaznik as wskaznik_2014,
+case when imp_gs10.wskaznik < 0 then round(imp_gs14.wskaznik/imp_gs10.wskaznik-1,2)*-1
+when imp_gs10.wskaznik > 0 then round(imp_gs14.wskaznik/imp_gs10.wskaznik-1,2) 
+else round(imp_gs14.wskaznik/imp_gs10.wskaznik-1,2) end wzrost_wskaznika
+from v_imports_goods_services_2010 imp_gs10
+join v_imports_goods_services_2014 imp_gs14
+on imp_gs10.CountryCode = imp_gs14.CountryCode
+join Country c
+on c.CountryCode = imp_gs10.CountryCode
+where c.Region = 'Europe & Central Asia' and wzrost_wskaznika is not null
+order by wzrost_wskaznika desc
+Limit 10
+
+
+-- High-technology exports (% of manufactured exports) SPADEK 
+
+select
+ht_exp09.CountryName,
+ht_exp09.wskaznik as wskaznik_2009,
+ht_exp13.wskaznik as wskaznik_2013,
+case when ht_exp09.wskaznik < 0 then round(ht_exp13.wskaznik/ht_exp09.wskaznik-1,2)*-1
+when ht_exp09.wskaznik > 0 then round(ht_exp13.wskaznik/ht_exp09.wskaznik-1,2) 
+else round(ht_exp13.wskaznik/ht_exp09.wskaznik-1,2) end spadek_wskaznika
+from v_high_tech_exp_2009 ht_exp09
+join v_high_tech_exp_2013 ht_exp13
+on ht_exp09.CountryCode = ht_exp13.CountryCode
+join Country c
+on c.CountryCode = ht_exp09.CountryCode
+where c.Region = 'East Asia & Pacific' and spadek_wskaznika is not null
+order by spadek_wskaznika 
+Limit 10
+
+-- High-technology exports (% of manufactured exports) WZROST
+
+select
+ht_exp09.CountryName,
+ht_exp09.wskaznik as wskaznik_2009,
+ht_exp13.wskaznik as wskaznik_2013,
+case when ht_exp09.wskaznik < 0 then round(ht_exp13.wskaznik/ht_exp09.wskaznik-1,2)*-1
+when ht_exp09.wskaznik > 0 then round(ht_exp13.wskaznik/ht_exp09.wskaznik-1,2) 
+else round(ht_exp13.wskaznik/ht_exp09.wskaznik-1,2) end wzrost_wskaznika
+from v_high_tech_exp_2009 ht_exp09
+join v_high_tech_exp_2013 ht_exp13
+on ht_exp09.CountryCode = ht_exp13.CountryCode
+join Country c
+on c.CountryCode = ht_exp09.CountryCode
+where c.Region = 'Sub-Saharan Africa' and wzrost_wskaznika is not null
+order by wzrost_wskaznika desc
+Limit 10
+
+
+
+--SPADEK Infalcja -- 
+select
+inf_10.CountryName,
+inf_10.wskaznik as wskaznik_2010,
+inf_14.wskaznik as wskaznik_2014,
+case when inf_10.wskaznik < 0 then round(inf_14.wskaznik/inf_10.wskaznik-1,2)*-1
+when inf_10.wskaznik > 0 then round(inf_14.wskaznik/inf_10.wskaznik-1,2) 
+else round(inf_14.wskaznik/inf_10.wskaznik-1,2) end spadek_wskaznika
+from v_inflation_2010 inf_10
+join v_inflation_2014 inf_14
+on inf_10.CountryCode = inf_14.CountryCode
+join Country c
+on c.CountryCode = inf_10.CountryCode
+where c.Region = 'Europe & Central Asia' and spadek_wskaznika is not null
+order by spadek_wskaznika 
+Limit 10
+
+
+--WZROST Infalcja -- 
+select
+inf_10.CountryName,
+inf_10.wskaznik as wskaznik_2010,
+inf_14.wskaznik as wskaznik_2014,
+case when inf_10.wskaznik < 0 then round(inf_14.wskaznik/inf_10.wskaznik-1,2)*-1
+when inf_10.wskaznik > 0 then round(inf_14.wskaznik/inf_10.wskaznik-1,2) 
+else round(inf_14.wskaznik/inf_10.wskaznik-1,2) end wzrost_wskaznika
+from v_inflation_2010 inf_10
+join v_inflation_2014 inf_14
+on inf_10.CountryCode = inf_14.CountryCode
+join Country c
+on c.CountryCode = inf_10.CountryCode
+where c.Region = 'Latin America & Caribbean' and wzrost_wskaznika is not null
+order by wzrost_wskaznika desc
+Limit 20
+
+
+
+--SPADEK "Ores and metals exports (% of merchandise exports) --
+select
+or_met_exp09.CountryName,
+or_met_exp09.wskaznik as wskaznik_2009,
+or_met_exp13.wskaznik as wskaznik_2013,
+case when or_met_exp09.wskaznik < 0 then round(or_met_exp13.wskaznik/or_met_exp09.wskaznik-1,2)*-1
+when or_met_exp09.wskaznik > 0 then round(or_met_exp13.wskaznik/or_met_exp09.wskaznik-1,2) 
+else round(or_met_exp13.wskaznik/or_met_exp09.wskaznik-1,2) end spadek_wskaznika
+from v_ores_metals_exports_2009 or_met_exp09
+join v_ores_metals_exports_2013 or_met_exp13
+on or_met_exp09.CountryCode = or_met_exp13.CountryCode
+join Country c
+on c.CountryCode = or_met_exp09.CountryCode
+where c.Region = 'South Asia' and spadek_wskaznika is not null
+order by spadek_wskaznika 
+Limit 10
+
+
+--WZROST "Ores and metals exports (% of merchandise exports) --
+select
+or_met_exp09.CountryName,
+or_met_exp09.wskaznik as wskaznik_2009,
+or_met_exp13.wskaznik as wskaznik_2013,
+case when or_met_exp09.wskaznik < 0 then round(or_met_exp13.wskaznik/or_met_exp09.wskaznik-1,2)*-1
+when or_met_exp09.wskaznik > 0 then round(or_met_exp13.wskaznik/or_met_exp09.wskaznik-1,2) 
+else round(or_met_exp13.wskaznik/or_met_exp09.wskaznik-1,2) end wzrost_wskaznika
+from v_ores_metals_exports_2009 or_met_exp09
+join v_ores_metals_exports_2013 or_met_exp13
+on or_met_exp09.CountryCode = or_met_exp13.CountryCode
+join Country c
+on c.CountryCode = or_met_exp09.CountryCode
+where c.Region = 'East Asia & Pacific' and wzrost_wskaznika is not null
+order by wzrost_wskaznika desc
+Limit 10
+
+
+
+--SPADEK "Ores and metals imports (% of merchandise imports) --
+select
+or_met_imp09.CountryName,
+or_met_imp09.wskaznik as wskaznik_2009,
+or_met_imp13.wskaznik as wskaznik_2013,
+case when or_met_imp09.wskaznik < 0 then round(or_met_imp13.wskaznik/or_met_imp09.wskaznik-1,2)*-1
+when or_met_imp09.wskaznik > 0 then round(or_met_imp13.wskaznik/or_met_imp09.wskaznik-1,2) 
+else round(or_met_imp13.wskaznik/or_met_imp09.wskaznik-1,2) end spadek_wskaznika
+from v_ores_metals_imports_2009 or_met_imp09
+join v_ores_metals_imports_2013 or_met_imp13
+on or_met_imp09.CountryCode = or_met_imp13.CountryCode
+join Country c
+on c.CountryCode = or_met_imp09.CountryCode
+where c.Region = 'East Asia & Pacific' and spadek_wskaznika is not null
+order by spadek_wskaznika 
+Limit 10
+
+
+--WZROST "Ores and metals imports (% of merchandise imports) --
+select
+or_met_imp09.CountryName,
+or_met_imp09.wskaznik as wskaznik_2009,
+or_met_imp13.wskaznik as wskaznik_2013,
+case when or_met_imp09.wskaznik < 0 then round(or_met_imp13.wskaznik/or_met_imp09.wskaznik-1,2)*-1
+when or_met_imp09.wskaznik > 0 then round(or_met_imp13.wskaznik/or_met_imp09.wskaznik-1,2) 
+else round(or_met_imp13.wskaznik/or_met_imp09.wskaznik-1,2) end wzrost_wskaznika
+from v_ores_metals_imports_2009 or_met_imp09
+join v_ores_metals_imports_2013 or_met_imp13
+on or_met_imp09.CountryCode = or_met_imp13.CountryCode
+join Country c
+on c.CountryCode = or_met_imp09.CountryCode
+where c.Region = 'Sub-Saharan Africa' and wzrost_wskaznika is not null
+order by wzrost_wskaznika desc
+Limit 10
+
+
+
+--SPADEK Energy use (kg of oil equivalent per capita) --
+select
+energy_use08.CountryName,
+energy_use08.wskaznik as wskaznik_2008,
+energy_use12.wskaznik as wskaznik_2012,
+case when energy_use08.wskaznik < 0 then round(energy_use12.wskaznik/energy_use08.wskaznik-1,2)*-1
+when energy_use08.wskaznik > 0 then round(energy_use12.wskaznik/energy_use08.wskaznik-1,2) 
+else round(energy_use12.wskaznik/energy_use08.wskaznik-1,2) end spadek_wskaznika
+from v_energy_use_2008 energy_use08
+join v_energy_use_2012 energy_use12
+on energy_use08.CountryCode = energy_use12.CountryCode
+join Country c
+on c.CountryCode = energy_use08.CountryCode
+where c.Region = 'Middle East & North Africa' and spadek_wskaznika is not null
+order by spadek_wskaznika 
+Limit 20
+
+
+--WZROST Energy use (kg of oil equivalent per capita) --
+
+select
+energy_use08.CountryName,
+energy_use08.wskaznik as wskaznik_2008,
+energy_use12.wskaznik as wskaznik_2012,
+case when energy_use08.wskaznik < 0 then round(energy_use12.wskaznik/energy_use08.wskaznik-1,2)*-1
+when energy_use08.wskaznik > 0 then round(energy_use12.wskaznik/energy_use08.wskaznik-1,2) 
+else round(energy_use12.wskaznik/energy_use08.wskaznik-1,2) end wzrost_wskaznika
+from v_energy_use_2008 energy_use08
+join v_energy_use_2012 energy_use12
+on energy_use08.CountryCode = energy_use12.CountryCode
+join Country c
+on c.CountryCode = energy_use08.CountryCode
+where c.Region = 'South Asia' and wzrost_wskaznika is not null
+order by wzrost_wskaznika desc 
+Limit 10
+
+
+
+--SPADEK Renewable energy consumption (% of total final energy consumption)--
+
+select
+ren_energy_cn08.CountryName,
+ren_energy_cn08.wskaznik as wskaznik_2008,
+ren_energy_cn12.wskaznik as wskaznik_2012,
+case when ren_energy_cn08.wskaznik < 0 then round(ren_energy_cn12.wskaznik/ren_energy_cn08.wskaznik-1,2)*-1
+when ren_energy_cn08.wskaznik > 0 then round(ren_energy_cn12.wskaznik/ren_energy_cn08.wskaznik-1,2) 
+else round(ren_energy_cn12.wskaznik/ren_energy_cn08.wskaznik-1,2) end spadek_wskaznika
+from v_renewable_energy_cn_2008 ren_energy_cn08
+join v_renewable_energy_cn_2012 ren_energy_cn12
+on ren_energy_cn08.CountryCode = ren_energy_cn12.CountryCode
+join Country c
+on c.CountryCode = ren_energy_cn08.CountryCode
+where c.Region = 'South Asia' and spadek_wskaznika is not null
+order by spadek_wskaznika 
+Limit 10
+
+
+--WZROST Renewable energy consumption (% of total final energy consumption)--
+
+select
+ren_energy_cn08.CountryName,
+ren_energy_cn08.wskaznik as wskaznik_2008,
+ren_energy_cn12.wskaznik as wskaznik_2012,
+case when ren_energy_cn08.wskaznik < 0 then round(ren_energy_cn12.wskaznik/ren_energy_cn08.wskaznik-1,2)*-1
+when ren_energy_cn08.wskaznik > 0 then round(ren_energy_cn12.wskaznik/ren_energy_cn08.wskaznik-1,2) 
+else round(ren_energy_cn12.wskaznik/ren_energy_cn08.wskaznik-1,2) end wzrost_wskaznika
+from v_renewable_energy_cn_2008 ren_energy_cn08
+join v_renewable_energy_cn_2012 ren_energy_cn12
+on ren_energy_cn08.CountryCode = ren_energy_cn12.CountryCode
+join Country c
+on c.CountryCode = ren_energy_cn08.CountryCode
+where c.Region = 'Europe & Central Asia' and wzrost_wskaznika is not null
+order by wzrost_wskaznika desc
+Limit 10
+
+
