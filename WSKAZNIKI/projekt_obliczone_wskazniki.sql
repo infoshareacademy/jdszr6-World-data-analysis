@@ -64,15 +64,37 @@ from v_primary_view as vp
 where vp.IndicatorName = "Fossil fuel energy consumption (% of total)" and vp.year = 2010
 order by CountryName
 
---TOP 10 NAJGORSZYCH PAŃSTW FF consumption
+
+--1. Fossil fuel energy consumption (% of total)  (THIRD PERIOD) --
+create view v_fossil_fuel_consumption_2008 as
+select
+vp.region ,
+vp.CountryName ,
+vp.CountryCode ,
+vp.IndicatorName ,
+vp."Year" ,
+round(vp.wskaznik) as wskaznik
+from v_primary_view as vp
+where vp.IndicatorName = "Fossil fuel energy consumption (% of total)" and vp.year = 2008
+order by CountryName
+
+
+
+--TOP 10 NAJGORSZYCH PAŃSTW FF consumption (ze wskzanikiem pomiedzy 2008)
 select
 ffc06.CountryName,
 ffc06.wskaznik as wskaznik_2006,
+ffc08.wskaznik as wskaznik_2008,
 ffc10.wskaznik as wskaznik_2010,
 round(ffc10.wskaznik/ffc06.wskaznik-1,2) as spadek_wskaznika
 from v_fossil_fuel_consumption_2006 ffc06
 join v_fossil_fuel_consumption_2010 ffc10
 on ffc06.CountryCode = ffc10.CountryCode
+join v_fossil_fuel_consumption_2008 ffc08
+on ffc08.CountryCode = ffc06.CountryCode
+join Country c
+on c.CountryCode = ffc06.CountryCode
+where c.Region = 'Europe & Central Asia'
 order by spadek_wskaznika 
 Limit 10
 
@@ -168,8 +190,8 @@ fes10.region,
 round(AVG(fes10.wskaznik)) as wskaznik_2010,
 round(AVG(fes14.wskaznik)) as wskaznik_2014,
 round((AVG(fes14.wskaznik)) / (AVG(fes10.wskaznik))-1,2) as spadek_wzrost
-from v_fossil_fuel_consumption_2005 fes10
-join v_fossil_fuel_consumption_2010 fes14
+from v_fuel_exports_2010 fes10
+join v_fuel_exports_2014 fes14
 on fes10.CountryCode = fes14.CountryCode
 group by fes10.region
 order by spadek_wzrost desc
@@ -380,7 +402,7 @@ else round(ht_exp13.wskaznik/ht_exp09.wskaznik-1,2) end wzrost_wskaznika
 from v_high_tech_exp_2009 ht_exp09
 join v_high_tech_exp_2013 ht_exp13
 on ht_exp09.CountryCode = ht_exp13.CountryCode
-where spadek_wskaznika is not null
+where wzrost_wskaznika is not null
 order by wzrost_wskaznika desc
 Limit 10
 
@@ -617,7 +639,7 @@ order by spadek_wzrost desc
 --9. Energy use (kg of oil equivalent per capita) ------------------------------------------------------------
 
 --(FIRST PERIOD)--
-create view v_energy_use_2009 as
+create view v_energy_use_2008 as
 select
 vp.region ,
 vp.CountryName ,
@@ -626,11 +648,11 @@ vp.IndicatorName ,
 vp."Year" ,
 round(vp.wskaznik) as wskaznik
 from v_primary_view as vp
-where vp.IndicatorName = "Energy use (kg of oil equivalent per capita)" and vp.year = 2009
+where vp.IndicatorName = "Energy use (kg of oil equivalent per capita)" and vp.year = 2008
 order by CountryName
 
 --(SECOND PERIOD)--
-create view  v_energy_use_2013 as
+create view  v_energy_use_2012 as
 select
 vp.region ,
 vp.CountryName ,
@@ -639,53 +661,54 @@ vp.IndicatorName ,
 vp."Year" ,
 round(vp.wskaznik) as wskaznik
 from v_primary_view as vp
-where vp.IndicatorName = "Energy use (kg of oil equivalent per capita)" and vp.year = 2013
+where vp.IndicatorName = "Energy use (kg of oil equivalent per capita)" and vp.year = 2012
 order by CountryName
 
 
 --SPADEK Energy use (kg of oil equivalent per capita) --
 select
-energy_use09.CountryName,
-energy_use09.wskaznik as wskaznik_2009,
-energy_use13.wskaznik as wskaznik_2013,
-case when energy_use09.wskaznik < 0 then round(energy_use13.wskaznik/energy_use09.wskaznik-1,2)*-1
-when energy_use09.wskaznik > 0 then round(energy_use13.wskaznik/energy_use09.wskaznik-1,2) 
-else round(energy_use13.wskaznik/energy_use09.wskaznik-1,2) end spadek_wskaznika
-from v_energy_use_2009 energy_use09
-join v_energy_use_2013 energy_use13
-on energy_use09.CountryCode = energy_use13.CountryCode
+energy_use08.CountryName,
+energy_use08.wskaznik as wskaznik_2008,
+energy_use12.wskaznik as wskaznik_2012,
+case when energy_use08.wskaznik < 0 then round(energy_use12.wskaznik/energy_use08.wskaznik-1,2)*-1
+when energy_use08.wskaznik > 0 then round(energy_use12.wskaznik/energy_use08.wskaznik-1,2) 
+else round(energy_use12.wskaznik/energy_use08.wskaznik-1,2) end spadek_wskaznika
+from v_energy_use_2008 energy_use08
+join v_energy_use_2012 energy_use12
+on energy_use08.CountryCode = energy_use12.CountryCode
 where spadek_wskaznika is not null
 order by spadek_wskaznika 
 Limit 10
 
 
 --WZROST Energy use (kg of oil equivalent per capita) --
+
 select
-energy_use09.CountryName,
-energy_use09.wskaznik as wskaznik_2009,
-energy_use13.wskaznik as wskaznik_2013,
-case when energy_use09.wskaznik < 0 then round(energy_use13.wskaznik/energy_use09.wskaznik-1,2)*-1
-when energy_use09.wskaznik > 0 then round(energy_use13.wskaznik/energy_use09.wskaznik-1,2) 
-else round(energy_use13.wskaznik/energy_use09.wskaznik-1,2) end wzrost_wskaznika
-from v_energy_use_2009 energy_use09
-join v_energy_use_2013 energy_use13
-on energy_use09.CountryCode = energy_use13.CountryCode
+energy_use08.CountryName,
+energy_use08.wskaznik as wskaznik_2008,
+energy_use12.wskaznik as wskaznik_2012,
+case when energy_use08.wskaznik < 0 then round(energy_use12.wskaznik/energy_use08.wskaznik-1,2)*-1
+when energy_use08.wskaznik > 0 then round(energy_use12.wskaznik/energy_use08.wskaznik-1,2) 
+else round(energy_use12.wskaznik/energy_use08.wskaznik-1,2) end wzrost_wskaznika
+from v_energy_use_2008 energy_use08
+join v_energy_use_2012 energy_use12
+on energy_use08.CountryCode = energy_use12.CountryCode
 where wzrost_wskaznika is not null
-order by wzrost_wskaznika desc
+order by wzrost_wskaznika desc 
 Limit 10
 
 
 --REGIONY-- Energy use (kg of oil equivalent per capita) -- 
 
 select
-energy_use09.region,
-round(AVG(energy_use09.wskaznik)) as wskaznik_2009,
-round(AVG(energy_use13.wskaznik)) as wskaznik_2013,
-round((AVG(energy_use13.wskaznik)) / (AVG(energy_use09.wskaznik))-1,2) as spadek_wzrost
-from v_energy_use_2009 energy_use09
-join v_energy_use_2013 energy_use13
-on energy_use09.CountryCode = energy_use13.CountryCode
-group by energy_use09.region
+energy_use08.region,
+round(AVG(energy_use08.wskaznik)) as wskaznik_2008,
+round(AVG(energy_use12.wskaznik)) as wskaznik_2012,
+round((AVG(energy_use12.wskaznik)) / (AVG(energy_use08.wskaznik))-1,2) as spadek_wzrost
+from v_energy_use_2008 energy_use08
+join v_energy_use_2012 energy_use12
+on energy_use08.CountryCode = energy_use12.CountryCode
+group by energy_use08.region
 order by spadek_wzrost desc
 
 --10. Renewable energy consumption (% of total final energy consumption) -----------------------------------------------------------
@@ -750,7 +773,7 @@ order by wzrost_wskaznika desc
 Limit 10
 
 
---REGIONY-- Energy use (kg of oil equivalent per capita) -- 
+--REGIONY-- Renewable energy consumption (% of total final energy consumption)-- 
 
 select
 ren_energy_cn08.region,
@@ -762,6 +785,8 @@ join v_renewable_energy_cn_2012 ren_energy_cn12
 on ren_energy_cn08.CountryCode = ren_energy_cn12.CountryCode
 group by ren_energy_cn08.region
 order by spadek_wzrost desc
+
+
 
 
 
