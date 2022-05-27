@@ -1,0 +1,1 @@
+W folderze znajdują się finalne kody dla poszczególnych modeli. Wybranym przez nas modelem jest XGBoost z dobranymi hiperparametrami, który daje najlepsze wyniki (Recall 0.84 i wysokie wartości pozostałych metryk). 
