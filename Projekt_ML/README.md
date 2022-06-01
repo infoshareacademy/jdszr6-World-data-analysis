@@ -8,6 +8,6 @@ Ostatnia kolumna, w której znajduje się informacja o śmierci pacjenta stanowi
 
 Zrealizowane cele projektu:
 * Eksploracja danych.
-* Stworzenie modelu klasyfikacyjnego wykrywającego możliwie największą liczbę pacjentów najbardziej narażonych na niewydolność serca przy jednoczesnym ograniczeniu błędnego przyporządkowywania osób zdrowych do chorych. 
+* Stworzenie modelu klasyfikacyjnego wykrywającego możliwie największą liczbę pacjentów najbardziej narażonych na niewydolność serca przy jednoczesnym ograniczeniu błędnego przyporządkowywania osób zdrowych do zagrożonych niewydolnością serca. 
 * Stworzenie wykorzystującej model, łatwej w obsłudze i dającej natychmiastowe predykcje aplikacji wspierającej pracowników branży medycznej.
 * Opracowanie propozycji wdrożenia i kalkulacja potencjalnych korzyści dla pacjentów i zysków dla placówek medycznych wynikających z implementacji aplikacji.
