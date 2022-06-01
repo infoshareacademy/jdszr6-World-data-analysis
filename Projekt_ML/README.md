@@ -1,3 +1,6 @@
+PROJEKT NR 3 MACHINE LEARNING <br>
+TEMAT: ESTYMACJA NIEWYDOLNOŚCI SERCA
+
 https://www.kaggle.com/datasets/andrewmvd/heart-failure-clinical-data
 
 Dataset składa się z 299 rekordów i 13 kolumn zawierających zmienne numeryczne opisujące stan zdrowia pacjentów. 
